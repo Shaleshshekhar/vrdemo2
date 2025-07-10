@@ -116,3 +116,10 @@
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+ model-viewer {
+      width: 100vw;
+      height: 100vh;
+      background-color: #000;
+      display: none;
+    }
