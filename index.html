@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>3D Gift 🎁</title>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+ <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="splash">
+  <div class="splash-content">
+    <!-- Left Column (Illustration or Square Stack) -->
+    <div class="left-column">
+      <div class="square-box">
+        <img src="assets/Ballon_Butterfly.png" class="layer layer2 float" alt="Layer 2">
+        <img src="assets/Cake.png" class="layer layer1" alt="Layer 1">
+        <img src="assets/Cupcake.png" class="layer layer3 float" alt="Layer 3">
+      </div>
+    </div>
+
+    <!-- Right Column (Text + Button) -->
+    <div class="right-column">
+      <div class="text-box">
+        <h2>Ready for a Surprise?</h2>
+        <p class="sub-text">Put on your headset and step into your birthday surprise! </p>
+        <button id="openBtn" class="open-button">🎁 Open My Gift</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  <!-- Background audio -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="assets/bgmusic.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- 3D Viewer -->
+  <model-viewer
+    id="giftViewer"
+    src="assets/Dice_world_animation_VR10.glb"
+    alt="3D Gift"
+    camera-controls
+    autoplay
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    xr-environment
+    shadow-intensity="1"
+    exposure="1"
+    environment-image="neutral"
+  >
+    <button slot="ar-button" class="ar-button">Enter VR</button>
+  </model-viewer>
+
+  <script>
+    const splash = document.getElementById('splash');
+    const viewer = document.getElementById('giftViewer');
+    const openBtn = document.getElementById('openBtn');
+    const bgMusic = document.getElementById('bgMusic');
+
+    openBtn.addEventListener('click', async () => {
+      // Play music
+      bgMusic.play().catch(err => console.log('🎵 Audio blocked:', err));
+
+      // Hide splash
+      splash.style.opacity = 0;
+      setTimeout(() => splash.style.display = 'none', 1000);
+
+      // Show model viewer
+      viewer.style.display = 'block';
+
+      // Try entering VR automatically if supported
+      if (navigator.xr && navigator.xr.isSessionSupported) {
+        try {
+          const supported = await navigator.xr.isSessionSupported('immersive-vr');
+          if (supported) viewer.activateAR();
+        } catch (e) {
+          console.warn('⚠️ VR not supported:', e);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
