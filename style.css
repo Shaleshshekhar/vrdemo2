@@ -1,0 +1,118 @@
+/* Splash background */
+#splash {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url('assets/Background.png') center center / cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: opacity 1s ease;
+}
+
+/* Content layout: two columns */
+.splash-content {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+
+.left-column,
+.right-column {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive: stacked on mobile */
+@media (max-width: 768px), (orientation: portrait) {
+  .splash-content {
+    flex-direction: column;
+  }
+
+  .text-box h2 {
+    font-size: 2rem;
+  }
+}
+
+/* Square layered image container */
+.square-box {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 90%;
+  max-width: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.layer1 { z-index: 1; }
+.layer2 { z-index: 2; }
+.layer3 { z-index: 3; }
+
+.float {
+  animation: float 4s ease-in-out infinite alternate;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-10px); }
+}
+
+/* Text box styling */
+.text-box {
+  text-align: center;
+  color: #DE806E;
+  padding: 30px;
+  max-width: 5000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeInUp 1s ease-in-out;
+}
+
+.text-box h2 {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.sub-text {
+  font-size: 2.1rem;
+  color: #b37060;
+  margin-bottom: 25px;
+}
+
+.open-button {
+  background: linear-gradient(to right, #ff6a88, #ff99ac);
+  color: white;
+  border: none;
+  padding: 14px 36px;
+  border-radius: 25px;
+  font-size: 2.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(255, 105, 135, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.open-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 24px rgba(255, 105, 135, 0.4);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
