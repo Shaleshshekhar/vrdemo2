@@ -31,6 +31,11 @@
 </div>
 
 
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader"></div>
+  </div>
+
 
   <!-- Background audio -->
   <audio id="bgMusic" loop preload="auto">
@@ -53,34 +58,43 @@
   >
     <button slot="ar-button" class="ar-button">Enter VR</button>
   </model-viewer>
+<script>
+  const splash = document.getElementById('splash');
+  const viewer = document.getElementById('giftViewer');
+  const openBtn = document.getElementById('openBtn');
+  const bgMusic = document.getElementById('bgMusic');
+  const loader = document.getElementById('loader');
 
-  <script>
-    const splash = document.getElementById('splash');
-    const viewer = document.getElementById('giftViewer');
-    const openBtn = document.getElementById('openBtn');
-    const bgMusic = document.getElementById('bgMusic');
+  openBtn.addEventListener('click', async () => {
+    // Play music
+    bgMusic.play().catch(err => console.log('🎵 Audio blocked:', err));
 
-    openBtn.addEventListener('click', async () => {
-      // Play music
-      bgMusic.play().catch(err => console.log('🎵 Audio blocked:', err));
+    // Hide splash screen
+    splash.style.opacity = 0;
+    setTimeout(() => splash.style.display = 'none', 1000);
 
-      // Hide splash
-      splash.style.opacity = 0;
-      setTimeout(() => splash.style.display = 'none', 1000);
+    // Show loader
+    loader.style.display = 'flex';
 
-      // Show model viewer
-      viewer.style.display = 'block';
+    // Show model viewer
+    viewer.style.display = 'block';
 
-      // Try entering VR automatically if supported
-      if (navigator.xr && navigator.xr.isSessionSupported) {
-        try {
-          const supported = await navigator.xr.isSessionSupported('immersive-vr');
-          if (supported) viewer.activateAR();
-        } catch (e) {
-          console.warn('⚠️ VR not supported:', e);
-        }
+    // Optional: Try entering VR automatically if supported
+    if (navigator.xr && navigator.xr.isSessionSupported) {
+      try {
+        const supported = await navigator.xr.isSessionSupported('immersive-vr');
+        if (supported) viewer.activateAR();
+      } catch (e) {
+        console.warn('⚠️ VR not supported:', e);
       }
-    });
-  </script>
+    }
+  });
+
+  // Wait for the 3D model to fully load
+  viewer.addEventListener('load', () => {
+    loader.style.display = 'none';
+  });
+</script>
+
 </body>
 </html>
