@@ -66,14 +66,17 @@
   const bgMusic = document.getElementById('bgMusic');
   const loader = document.getElementById('loader');
 
+  let modelVisible = false;
+
+  // Play music + start loading
   openBtn.addEventListener('click', () => {
     console.log('🎁 Open button clicked');
 
-    // Start music
+    // Music
     bgMusic.play().then(() => {
       console.log('🎵 Music started');
     }).catch(err => {
-      console.warn('❌ Music play failed', err);
+      console.warn('❌ Music play blocked', err);
     });
 
     // Hide splash
@@ -82,14 +85,31 @@
 
     // Show loader
     loader.style.display = 'flex';
+
+    // Show model-viewer (to allow proper loading)
+    viewer.style.display = 'block';
+
+    // Fallback: if model still not shown in 10 sec
+    setTimeout(() => {
+      if (!modelVisible) {
+        console.warn('⏰ Timeout reached. Forcing model visible.');
+        loader.style.display = 'none';
+      }
+    }, 10000);
   });
 
-  viewer.addEventListener('load', () => {
-    console.log('✅ 3D model loaded');
-
-    // Hide loader and show model viewer
+  // Detect when the model is visually ready
+  viewer.addEventListener('poster-dismissed', () => {
+    console.log('✅ Model is now visible');
+    modelVisible = true;
     loader.style.display = 'none';
-    viewer.style.display = 'block';
+  });
+
+  // Backup: if poster-dismissed doesn’t fire
+  viewer.addEventListener('load', () => {
+    console.log('✅ Model loaded (fallback)');
+    modelVisible = true;
+    loader.style.display = 'none';
   });
 </script>
 
