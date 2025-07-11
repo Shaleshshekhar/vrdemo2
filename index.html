@@ -4,13 +4,14 @@
   <meta charset="UTF-8" />
   <title>3D Gift 🎁</title>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
- <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preload" as="fetch" href="https://dl.dropboxusercontent.com/scl/fi/rx30087i68e6h9ohg0c2a/Dice_world_animation_VR_Export_GLTF.glb?rlkey=ezhbftw0pj3mp0hmsv5mh0ip1&st=amcp4ucd" type="model/gltf-binary" crossorigin="anonymous">
 </head>
 <body>
 
 <div id="splash">
   <div class="splash-content">
-    <!-- Left Column (Illustration or Square Stack) -->
+    <!-- Left Column (Illustration) -->
     <div class="left-column">
       <div class="square-box">
         <img src="assets/Ballon_Butterfly.png" class="layer layer2 float" alt="Layer 2">
@@ -23,41 +24,41 @@
     <div class="right-column">
       <div class="text-box">
         <h2>Ready for a Surprise?</h2>
-        <p class="sub-text">Put on your headset and step into your birthday surprise! </p>
+        <p class="sub-text">Put on your headset and step into your birthday surprise!</p>
         <button id="openBtn" class="open-button">🎁 Open My Gift</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Loader -->
+<div id="loader">
+  <div class="loader"></div>
+</div>
 
-  <!-- Loader -->
-  <div id="loader">
-    <div class="loader"></div>
-  </div>
+<!-- Background audio -->
+<audio id="bgMusic" loop preload="auto">
+  <source src="assets/bgmusic.mp3" type="audio/mpeg" />
+</audio>
 
+<!-- 3D Viewer -->
+<model-viewer
+  id="giftViewer"
+  src="https://dl.dropboxusercontent.com/scl/fi/rx30087i68e6h9ohg0c2a/Dice_world_animation_VR_Export_GLTF.glb?rlkey=ezhbftw0pj3mp0hmsv5mh0ip1&st=amcp4ucd"
+  alt="3D Gift"
+  camera-controls
+  autoplay
+  ar
+  ar-modes="webxr scene-viewer quick-look"
+  xr-environment
+  shadow-intensity="1"
+  exposure="1"
+  environment-image="neutral"
+  style="display: none;"
+>
+  <button slot="ar-button" class="ar-button">Enter VR</button>
+</model-viewer>
 
-  <!-- Background audio -->
-  <audio id="bgMusic" loop preload="auto">
-    <source src="assets/bgmusic.mp3" type="audio/mpeg" />
-  </audio>
-
-  <!-- 3D Viewer -->
-  <model-viewer
-    id="giftViewer"
-    src="https://dl.dropboxusercontent.com/scl/fi/rx30087i68e6h9ohg0c2a/Dice_world_animation_VR_Export_GLTF.glb?rlkey=ezhbftw0pj3mp0hmsv5mh0ip1&st=amcp4ucd"
-    alt="3D Gift"
-    camera-controls
-    autoplay
-    ar
-    ar-modes="webxr scene-viewer quick-look"
-    xr-environment
-    shadow-intensity="1"
-    exposure="1"
-    environment-image="neutral"
-  >
-    <button slot="ar-button" class="ar-button">Enter VR</button>
-  </model-viewer>
 <script>
   const splash = document.getElementById('splash');
   const viewer = document.getElementById('giftViewer');
@@ -65,34 +66,30 @@
   const bgMusic = document.getElementById('bgMusic');
   const loader = document.getElementById('loader');
 
-  openBtn.addEventListener('click', async () => {
-    // Play music
-    bgMusic.play().catch(err => console.log('🎵 Audio blocked:', err));
+  openBtn.addEventListener('click', () => {
+    console.log('🎁 Open button clicked');
 
-    // Hide splash screen
+    // Start music
+    bgMusic.play().then(() => {
+      console.log('🎵 Music started');
+    }).catch(err => {
+      console.warn('❌ Music play failed', err);
+    });
+
+    // Hide splash
     splash.style.opacity = 0;
     setTimeout(() => splash.style.display = 'none', 1000);
 
     // Show loader
     loader.style.display = 'flex';
-
-    // Show model viewer
-    viewer.style.display = 'block';
-
-    // Optional: Try entering VR automatically if supported
-    if (navigator.xr && navigator.xr.isSessionSupported) {
-      try {
-        const supported = await navigator.xr.isSessionSupported('immersive-vr');
-        if (supported) viewer.activateAR();
-      } catch (e) {
-        console.warn('⚠️ VR not supported:', e);
-      }
-    }
   });
 
-  // Wait for the 3D model to fully load
   viewer.addEventListener('load', () => {
+    console.log('✅ 3D model loaded');
+
+    // Hide loader and show model viewer
     loader.style.display = 'none';
+    viewer.style.display = 'block';
   });
 </script>
 
